@@ -522,7 +522,7 @@ namespace PPT_0309
             else if (!hasAttributes && !hasChildren)
             {
                 writeNodeToXML(thisID, fatherID, get_typeName(element.GetType().ToString()) + nodeCount, element.InnerText, prefix, "true");
-                writeAttrToXML(+attrID, 0, element.LocalName, element.InnerText, prefix, "0", "0");
+                writeAttrToXML(++attrID, 0, element.LocalName, element.InnerText, prefix, "0", "0");
                 //addRow_Wtree(get_typeName(element.GetType().ToString()) + nodeCount, get_typeName(element.GetType().ToString()), fatherID, thisID, prefix, "1", element.InnerText, depth, serial, "0");
                 //addRow_WtreeAttrs(element.LocalName, element.InnerText, prefix, "0", "0", 0, depth, serial);
                 //Console.WriteLine("节点名：{0}\t文字内容：{1}\t节点ID：{2}\t父ID：{3}\t深度：{4}\t级：{5}\t前缀：{5}", element.LocalName, element.InnerText, thisID, fatherID, depth, serial, prefix);
