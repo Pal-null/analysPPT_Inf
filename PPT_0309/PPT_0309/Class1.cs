@@ -84,6 +84,10 @@ namespace PPT_0309
             docNode.AppendChild(RootNode);
             docAttr.AppendChild(RootAttr);
 
+            XmlElement totalScore = docAttr.CreateElement("totalScore");
+            totalScore.InnerText = "0";
+            RootAttr.AppendChild(totalScore);
+
             //开始解析
             GetResult(docName);
 
@@ -177,7 +181,7 @@ namespace PPT_0309
                             //addRow_Wtree("关联", "rId", CurrentRootID+1, ++rootID, "slide/" + xmlFileName + "/rId", "1", "", 3, 7, "0");
                             for (wi = 1; wi <= p.Parts.Count(); wi++)
                             {
-                                writeAttrToXML(++attrID, 0, "rId" + wi, p.GetPartById("rId" + wi).Uri.ToString(), "slide/" + xmlFileName + "/rId" + wi, "0", "0");
+                                writeAttrToXML(++attrID, 0, "rId" + wi, p.GetPartById("rId" + wi).Uri.ToString(), "slide/" + xmlFileName + "/rId" + wi, "0", "0", "null");
                                 //addRow_WtreeAttrs("rId" + wi, p.GetPartById("rId" + wi).Uri.ToString(), "slide/" + xmlFileName + "/rId" + wi, "0", "0", 0, 3, 7);
                             }
                         }
@@ -376,7 +380,7 @@ namespace PPT_0309
                                 //addRow_Wtree("关联", "slideLayout", CurrentRootID, ++rootID, "slideMaster/" + xmlFileName + "/" + "rId", "1", "", 4, 1, "0");
                                 for (wi = 1; wi <= p.Parts.Count(); wi++)
                                 {
-                                    writeAttrToXML(++attrID, 0, "rId" + wi, p.GetPartById("rId" + wi).Uri.ToString(), "slideMaster/" + xmlFileName + "/" + "rId" + wi, "0", "0");
+                                    writeAttrToXML(++attrID, 0, "rId" + wi, p.GetPartById("rId" + wi).Uri.ToString(), "slideMaster/" + xmlFileName + "/" + "rId" + wi, "0", "0", "null");
                                     //addRow_WtreeAttrs("rId" + wi, p.GetPartById("rId" + wi).Uri.ToString(), "slideMaster/" + xmlFileName + "/" + "rId" + wi, "0", "0", 0, 4, 1);
                                 }
                             }
@@ -452,7 +456,7 @@ namespace PPT_0309
                     int wi;
                     for (wi = 1; wi <= ppt.PresentationPart.Presentation.PresentationPart.Parts.Count(); wi++)
                     {
-                        writeAttrToXML(++attrID, 0, "rId" + wi, ppt.PresentationPart.Presentation.PresentationPart.GetPartById("rId" + wi).Uri.ToString(), "presentation/rId" + wi, "0", "0");
+                        writeAttrToXML(++attrID, 0, "rId" + wi, ppt.PresentationPart.Presentation.PresentationPart.GetPartById("rId" + wi).Uri.ToString(), "presentation/rId" + wi, "0", "0", "null");
                         //addRow_WtreeAttrs("rId" + wi, ppt.PresentationPart.Presentation.PresentationPart.GetPartById("rId" + wi).Uri.ToString(), "presentation/rId" + wi, "0", "0", 0, 3, 1);
                     }
                 }
@@ -495,7 +499,11 @@ namespace PPT_0309
                     imageIndex++;
                     String fileName = savePath + paperID + "-" + stuID + "-" + imageIndex + ".gif";
                     img.Save(fileName, System.Drawing.Imaging.ImageFormat.Gif);
-                    writeAttrToXML(++attrID, 0, "资源文件", paperID + "-" + stuID + "-" + imageIndex + ".gif", prefix, "0", "0");
+                    writeAttrToXML(++attrID, 0, "资源文件", paperID + "-" + stuID + "-" + imageIndex + ".gif", prefix, "0", "0", "null");
+                }
+                else if (element.LocalName == "transition")
+                {
+                    writeAttrToXML(++attrID, 0, "切换效果", element.LocalName, prefix + element.FirstChild.LocalName + "1/", "0", "0", "null");
                 }
                 //addRow_Wtree(get_typeName(element.GetType().ToString())+nodeCount, get_typeName(element.GetType().ToString()), fatherID, thisID, prefix, "0", element.InnerText, depth, serial, "0");
                 //Console.WriteLine("节点名：{0}\t节点ID：{1}\t父ID：{2}\t深度：{3}\t级：{4}\t前缀：{5}", element.LocalName, thisID, fatherID, depth, serial, prefix);
@@ -522,7 +530,7 @@ namespace PPT_0309
             else if (!hasAttributes && !hasChildren)
             {
                 writeNodeToXML(thisID, fatherID, get_typeName(element.GetType().ToString()) + nodeCount, element.InnerText, prefix, "true");
-                writeAttrToXML(++attrID, 0, element.LocalName, element.InnerText, prefix, "0", "0");
+                writeAttrToXML(++attrID, 0, element.LocalName, element.InnerText, prefix, "0", "0", "null");
                 //addRow_Wtree(get_typeName(element.GetType().ToString()) + nodeCount, get_typeName(element.GetType().ToString()), fatherID, thisID, prefix, "1", element.InnerText, depth, serial, "0");
                 //addRow_WtreeAttrs(element.LocalName, element.InnerText, prefix, "0", "0", 0, depth, serial);
                 //Console.WriteLine("节点名：{0}\t文字内容：{1}\t节点ID：{2}\t父ID：{3}\t深度：{4}\t级：{5}\t前缀：{5}", element.LocalName, element.InnerText, thisID, fatherID, depth, serial, prefix);
@@ -531,12 +539,16 @@ namespace PPT_0309
             //如果此节点有属性且有子节点
             else if (hasAttributes && hasChildren)
             {
+                if (element.LocalName == "transition")
+                {
+                    writeAttrToXML(++attrID, 0, "切换效果", element.LocalName, prefix + "/" + element.FirstChild.LocalName + "1/", "0", "0", "0");
+                }
                 writeNodeToXML(thisID, fatherID, get_typeName(element.GetType().ToString()) + nodeCount, element.InnerText, prefix, "false");
                 //addRow_Wtree(get_typeName(element.GetType().ToString())+nodeCount, get_typeName(element.GetType().ToString()), fatherID, thisID, prefix, "0", element.InnerText, depth, serial, "0");
                 //Console.WriteLine("节点名：{0}\t节点ID：{1}\t父ID：{2}\t深度：{3}\t级：{4}\t前缀：{5}", element.LocalName, thisID, fatherID, depth, serial, prefix);
                 foreach (OpenXmlAttribute attr in element.GetAttributes())
                 {
-                    writeAttrToXML(++attrID, 0, attr.LocalName, attr.Value, prefix, "0", "0");
+                    writeAttrToXML(++attrID, 0, attr.LocalName, attr.Value, prefix, "0", "0", "null");
                     //addRow_WtreeAttrs(attr.LocalName, attr.Value, prefix, "0", "0", 0, depth, serial);
                     //Console.WriteLine("节点名：{0}\t属性：{1}\t属性值：{2}\t节点ID：{3}\t父ID：{4}\t深度：{5}\t级：{6}\t前缀：{7}", element.LocalName, attr.LocalName, attr.Value, thisID, fatherID, depth, serial, prefix);
                 }
@@ -567,7 +579,7 @@ namespace PPT_0309
                 //Console.WriteLine("节点名：{0}\t节点ID：{1}\t父ID：{2}\t深度：{3}\t级：{4}\t前缀：{5}", element.LocalName, thisID, fatherID, depth, serial, prefix);
                 foreach (OpenXmlAttribute attr in element.GetAttributes())
                 {
-                    writeAttrToXML(++attrID, 0, attr.LocalName, attr.Value, prefix, "0", "0");
+                    writeAttrToXML(++attrID, 0, attr.LocalName, attr.Value, prefix, "0", "0", "null");
                     //addRow_WtreeAttrs(attr.LocalName, attr.Value, prefix, "0", "0", 0, depth, serial);
                     //Console.WriteLine("节点名：{0}\t属性：{1}\t属性值：{2}\t节点ID：{3}\t父ID：{4}\t深度；{5}\t级：{6}\t前缀：{7}", element.LocalName, attr.LocalName, attr.Value, thisID, fatherID, depth, serial, prefix);
                 }
@@ -610,7 +622,7 @@ namespace PPT_0309
         }
 
         public void writeAttrToXML(int ID, int fatherID, String attrName, String value, String Prefix,
-            String score, String status)
+            String score, String status, String checkType)
         {
             XmlElement element = docAttr.CreateElement("record");
             element.SetAttribute("ID", ID.ToString());
@@ -620,6 +632,7 @@ namespace PPT_0309
             element.SetAttribute("value", value);
             element.SetAttribute("score", score);
             element.SetAttribute("status", status);
+            element.SetAttribute("checkType", checkType);
             element.SetAttribute("paper", paperID.ToString());
             element.SetAttribute("userid", stuID.ToString());
             RootAttr.AppendChild(element);
