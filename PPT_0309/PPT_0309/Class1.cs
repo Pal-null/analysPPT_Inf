@@ -541,7 +541,7 @@ namespace PPT_0309
             {
                 if (element.LocalName == "transition")
                 {
-                    writeAttrToXML(++attrID, 0, "切换效果", element.LocalName, prefix + "/" + element.FirstChild.LocalName + "1/", "0", "0", "0");
+                    writeAttrToXML(++attrID, 0, "切换效果", element.LocalName, prefix + element.FirstChild.LocalName + "1/", "0", "0", "null");
                 }
                 writeNodeToXML(thisID, fatherID, get_typeName(element.GetType().ToString()) + nodeCount, element.InnerText, prefix, "false");
                 //addRow_Wtree(get_typeName(element.GetType().ToString())+nodeCount, get_typeName(element.GetType().ToString()), fatherID, thisID, prefix, "0", element.InnerText, depth, serial, "0");
