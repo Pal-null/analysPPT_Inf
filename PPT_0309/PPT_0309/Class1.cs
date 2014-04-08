@@ -489,7 +489,7 @@ namespace PPT_0309
                     ImagePart imagePart = (ImagePart)thisSlide.GetPartById(element.GetFirstChild<BlipFill>().Blip.Embed);
                     System.Drawing.Image img = System.Drawing.Image.FromStream(imagePart.GetStream());
                     imageIndex++;
-                    String fileName = paperID + stuID + rootID + "image" + imageIndex + ".gif";
+                    String fileName = paperID + "_" + stuID + "_" + rootID + "_image" + imageIndex + ".gif";
                     img.Save(savePath + fileName, System.Drawing.Imaging.ImageFormat.Gif);
                     writeAttrToXML(++attrID, 0, "资源文件", fileName, prefix, "0", "0", "null");
                 }
