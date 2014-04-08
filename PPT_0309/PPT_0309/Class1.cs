@@ -520,7 +520,7 @@ namespace PPT_0309
             else if (!hasAttributes && !hasChildren)
             {
                 writeNodeToXML(thisID, fatherID, get_typeName(element.GetType().ToString()) + nodeCount, element.InnerText, prefix, "true");
-                writeAttrToXML(+attrID, 0, get_typeName(element.GetType().ToString()), element.InnerText, prefix, "0", "0", "null");
+                writeAttrToXML(++attrID, 0, get_typeName(element.GetType().ToString()), element.InnerText, prefix, "0", "0", "null");
                 return;
             }
             //如果此节点有属性且有子节点
